@@ -1,6 +1,7 @@
 package com.demo.system.web;
 
 import com.demo.system.error.AppException;
+import com.demo.system.error.DataConflictException;
 import com.demo.system.util.validation.ValidationUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> persistException(WebRequest request, EntityNotFoundException ex) {
         log.error("EntityNotFoundException: {}", ex.getMessage());
         return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.of(MESSAGE), null), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(DataConflictException.class)
+    public ResponseEntity<?> dataConflictException(WebRequest request, DataConflictException ex) {
+        log.error("DataConflictException: {}", ex.getMessage());
+        return createResponseEntity(getDefaultBody(request, ErrorAttributeOptions.of(MESSAGE), null), HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<Object> handleBindingErrors(BindingResult result, WebRequest request) {
