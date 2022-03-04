@@ -50,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/api/restaurants/**").permitAll()
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers("/api/**").authenticated()
