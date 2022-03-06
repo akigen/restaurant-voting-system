@@ -1,7 +1,9 @@
 package com.demo.system.web.restaurant;
 
+import com.demo.system.View;
 import com.demo.system.model.Restaurant;
 import com.demo.system.repository.RestaurantRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,6 +31,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/menu_today")
+    @JsonView(View.RestaurantWithMeals.class)
     public List<Restaurant> getWithMenuForToday() {
         log.info("getWithMenuForToday");
         return repository.getWithMenuByDate(LocalDate.now());
@@ -36,6 +39,7 @@ public class RestaurantController {
 
 
     @GetMapping("/{id}/menu_today")
+    @JsonView(View.RestaurantWithMeals.class)
     public Restaurant getWithMenuByRestaurantForToday(@PathVariable int id) {
         log.info("getWithMenuByRestaurantForToday {}", id);
         repository.checkAvailable(id);

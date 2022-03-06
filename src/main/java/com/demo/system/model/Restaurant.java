@@ -1,8 +1,11 @@
 package com.demo.system.model;
 
+import com.demo.system.View;
 import com.demo.system.util.validation.NoHtml;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -38,7 +41,8 @@ public class Restaurant extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("name ASC")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonView(View.RestaurantWithMeals.class)
+    @Schema(hidden = true)
     @ToString.Exclude
     @JsonInclude(JsonInclude.Include.NON_EMPTY) //https://stackoverflow.com/a/27964775/548473
     private List<MenuItem> menuItems;
