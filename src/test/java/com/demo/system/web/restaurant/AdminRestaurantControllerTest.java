@@ -1,6 +1,7 @@
 package com.demo.system.web.restaurant;
 
 import com.demo.system.model.Restaurant;
+import com.demo.system.repository.MenuItemRepository;
 import com.demo.system.repository.RestaurantRepository;
 import com.demo.system.repository.VoteRepository;
 import com.demo.system.util.JsonUtil;
@@ -34,6 +35,8 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     private RestaurantRepository restaurantRepository;
     @Autowired
     private VoteRepository voteRepository;
+    @Autowired
+    private MenuItemRepository menuItemRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -50,6 +53,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteWithoutVote() throws Exception {
         voteRepository.deleteByRestaurantId(MAC_ID);
+        menuItemRepository.deleteByRestaurantId(MAC_ID);
         perform(MockMvcRequestBuilders.delete(REST_URL + MAC_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
