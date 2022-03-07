@@ -3,6 +3,7 @@ package com.demo.system.web.restaurant;
 import com.demo.system.model.DishRef;
 import com.demo.system.model.MenuItem;
 import com.demo.system.model.Restaurant;
+import com.demo.system.to.RestaurantWithMenu;
 import com.demo.system.web.MatcherFactory;
 import com.demo.system.web.MatcherFactory.Matcher;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class RestaurantTestData {
     public static final Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menuItems");
-    public static final Matcher<Restaurant> RESTAURANT_MATCHER_WITH_MENU = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menuItems.restaurant", "menuItems.dishRef");
+    public static final Matcher<RestaurantWithMenu> RESTAURANT_MATCHER_WITH_MENU = MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithMenu.class, "dishRefs.restaurant");
 
     public static final Matcher<DishRef> DISH_REF_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(DishRef.class, "restaurant");
 
@@ -41,9 +42,10 @@ public class RestaurantTestData {
 
     static {
 //         set menu for today, sorted by name
-        wasabi.setMenuItems(List.of(wasabi_9, wasabi_8, wasabi_7));
+        wasabi.setMenuItems(List.of(wasabi_9, wasabi_7));
         mac.setMenuItems(List.of(mac_1, mac_3, mac_2));
         shalypin.setEnabled(false);
+        wasabi_rf.setEnabled(false);
     }
 
     public static Restaurant getNew() {
@@ -53,7 +55,6 @@ public class RestaurantTestData {
     public static Restaurant getUpdated() {
         return new Restaurant(MAC_ID, "Мак", "ул. Урицкого, 33");
     }
-
 
     public static DishRef getNewDish() {
         return new DishRef(null, "Новая Мак-еда", 12000, mac);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.demo.system.util.RestaurantUtil.withMenu;
 import static com.demo.system.web.restaurant.RestaurantTestData.MAC_ID;
 import static com.demo.system.web.restaurant.RestaurantTestData.RESTAURANT_MATCHER;
 import static com.demo.system.web.restaurant.RestaurantTestData.RESTAURANT_MATCHER_WITH_MENU;
@@ -27,7 +28,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + "menu_today"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(wasabi, mac));
+                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(withMenu(wasabi), withMenu(mac)));
     }
 
     @Test
@@ -35,7 +36,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + MAC_ID + "/menu_today"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(mac));
+                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(withMenu(mac)));
     }
 
     @Test
