@@ -4,6 +4,8 @@ import com.demo.system.model.Restaurant;
 import com.demo.system.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +36,7 @@ import static com.demo.system.util.validation.ValidationUtil.checkNew;
 @AllArgsConstructor
 @Slf4j
 public class AdminRestaurantController {
+
     static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
@@ -51,12 +54,18 @@ public class AdminRestaurantController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Caching(evict = {
+            @CacheEvict(value = "restaurants", allEntries = true),
+            @CacheEvict(value = "allRestaurantsWithMenu", allEntries = true),
+            @CacheEvict(value = "restaurantWithMenu", key = "#id")
+    })
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         repository.deleteExisted(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(value = "restaurants", allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create {}", restaurant);
         checkNew(restaurant);
@@ -69,6 +78,11 @@ public class AdminRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Caching(evict = {
+            @CacheEvict(value = "restaurants", allEntries = true),
+            @CacheEvict(value = "allRestaurantsWithMenu", allEntries = true),
+            @CacheEvict(value = "restaurantWithMenu", key = "#id")
+    })
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
@@ -78,6 +92,11 @@ public class AdminRestaurantController {
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "restaurants", allEntries = true),
+            @CacheEvict(value = "allRestaurantsWithMenu", allEntries = true),
+            @CacheEvict(value = "restaurantWithMenu", key = "#id")
+    })
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
         Restaurant restaurant = repository.getById(id);

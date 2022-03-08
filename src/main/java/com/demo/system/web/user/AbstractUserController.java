@@ -29,7 +29,6 @@ public abstract class AbstractUserController {
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         log.info("delete {}", id);
         repository.deleteExisted(id);
