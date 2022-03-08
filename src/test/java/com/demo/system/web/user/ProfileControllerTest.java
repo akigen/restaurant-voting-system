@@ -1,5 +1,6 @@
 package com.demo.system.web.user;
 
+import com.demo.system.mapper.UserMapper;
 import com.demo.system.model.User;
 import com.demo.system.repository.UserRepository;
 import com.demo.system.to.UserTo;
@@ -25,6 +26,9 @@ class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -52,7 +56,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     @Test
     void register() throws Exception {
         UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
-        User newUser = UserUtil.createNewFromTo(newTo);
+        User newUser = userMapper.toEntity(newTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
@@ -75,7 +79,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userRepository.getById(USER_ID), UserUtil.updateFromTo(new User(user), updatedTo));
+        USER_MATCHER.assertMatch(userRepository.getById(USER_ID), userMapper.updateFromTo(new User(user), updatedTo));
     }
 
     @Test

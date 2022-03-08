@@ -1,9 +1,9 @@
 package com.demo.system.web.restaurant;
 
+import com.demo.system.mapper.RestaurantMapper;
 import com.demo.system.model.Restaurant;
 import com.demo.system.repository.RestaurantRepository;
 import com.demo.system.to.RestaurantWithMenu;
-import com.demo.system.util.RestaurantUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +24,7 @@ public class RestaurantController {
     static final String REST_URL = "/api/restaurants";
 
     private final RestaurantRepository repository;
+    private final RestaurantMapper restaurantMapper;
 
     @GetMapping
     @Cacheable("restaurants")
@@ -37,7 +38,7 @@ public class RestaurantController {
     public List<RestaurantWithMenu> getWithMenuForToday() {
         log.info("getWithMenuForToday");
         List<Restaurant> restaurants = repository.getWithMenuByDate(LocalDate.now());
-        return RestaurantUtil.withMenu(restaurants);
+        return restaurantMapper.toToList(restaurants);
     }
 
 
@@ -47,6 +48,6 @@ public class RestaurantController {
         log.info("getWithMenuByRestaurantForToday {}", id);
         repository.checkAvailable(id);
         Restaurant restaurant = repository.getWithMenuByRestaurantAndDate(id, LocalDate.now());
-        return RestaurantUtil.withMenu(restaurant);
+        return restaurantMapper.toTo(restaurant);
     }
 }

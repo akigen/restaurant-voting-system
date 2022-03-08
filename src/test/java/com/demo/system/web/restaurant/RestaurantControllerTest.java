@@ -1,5 +1,6 @@
 package com.demo.system.web.restaurant;
 
+import com.demo.system.mapper.RestaurantMapper;
 import com.demo.system.repository.RestaurantRepository;
 import com.demo.system.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.demo.system.util.RestaurantUtil.withMenu;
 import static com.demo.system.web.restaurant.RestaurantTestData.MAC_ID;
 import static com.demo.system.web.restaurant.RestaurantTestData.RESTAURANT_MATCHER;
 import static com.demo.system.web.restaurant.RestaurantTestData.RESTAURANT_MATCHER_WITH_MENU;
@@ -21,14 +21,16 @@ class RestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantController.REST_URL + '/';
 
     @Autowired
-    private RestaurantRepository restaurantRepository;
+    private RestaurantRepository repository;
+    @Autowired
+    private RestaurantMapper mapper;
 
     @Test
     void getWithMenuForToday() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "menu_today"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(withMenu(wasabi), withMenu(mac)));
+                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(mapper.toTo(wasabi), mapper.toTo(mac)));
     }
 
     @Test
@@ -36,7 +38,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + MAC_ID + "/menu_today"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(withMenu(mac)));
+                .andExpect(RESTAURANT_MATCHER_WITH_MENU.contentJson(mapper.toTo(mac)));
     }
 
     @Test
@@ -47,7 +49,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     void getAllEnabled() throws Exception {
-        restaurantRepository.save(mac);
+        repository.save(mac);
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

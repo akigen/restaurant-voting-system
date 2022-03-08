@@ -1,6 +1,7 @@
 package com.demo.system.model;
 
 import com.demo.system.HasIdAndEmail;
+import com.demo.system.mapper.Default;
 import com.demo.system.util.validation.NoHtml;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
@@ -77,6 +78,11 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
 
     public User(User u) {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
+    }
+
+    @Default
+    public User(Integer id, String name, String email, String password) {
+        this(id, name, email, password, true, new Date(), EnumSet.of(Role.USER));
     }
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
