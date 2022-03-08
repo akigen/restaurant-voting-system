@@ -5,7 +5,7 @@ import com.demo.system.model.User;
 import com.demo.system.model.Vote;
 import com.demo.system.repository.RestaurantRepository;
 import com.demo.system.repository.VoteRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,9 +17,9 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VoteService {
-    private  final VoteRepository repository;
+    private final VoteRepository repository;
     private final RestaurantRepository restaurantRepository;
 
     @Setter
@@ -55,6 +55,4 @@ public class VoteService {
             vote.setRestaurantId(restaurantId);
         }
     }
-
-
 }
