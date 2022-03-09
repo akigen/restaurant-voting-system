@@ -110,4 +110,8 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
+
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
+    }
 }

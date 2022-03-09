@@ -3,6 +3,7 @@ package com.demo.system.web.restaurant;
 import com.demo.system.model.DishRef;
 import com.demo.system.repository.DishRefRepository;
 import com.demo.system.service.DishRefService;
+import com.demo.system.util.validation.AdminRestaurantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,7 +38,7 @@ import static com.demo.system.util.validation.ValidationUtil.checkNew;
 @Slf4j
 public class AdminDishRefController {
 
-    static final String REST_URL = "/api/admin/restaurants/{restaurantId}/dish-ref";
+    static final String REST_URL = AdminRestaurantsUtil.REST_URL + "/{restaurantId}/dish-ref";
 
     private final DishRefRepository repository;
     private final DishRefService service;

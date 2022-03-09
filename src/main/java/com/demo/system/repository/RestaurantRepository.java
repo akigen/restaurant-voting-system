@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.QueryHint;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -34,6 +35,9 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             ORDER BY d.name ASC
             """)
     Restaurant getWithMenuByRestaurantAndDate(int id, LocalDate date);
+
+    @Query("SELECT r from Restaurant r WHERE r.id IN (:ids) ORDER BY r.name ASC")
+    List<Restaurant> getIn(Collection<Integer> ids);
 
     @Query("SELECT r from Restaurant r WHERE r.enabled=true ORDER BY r.name ASC")
     List<Restaurant> getAllEnabled();

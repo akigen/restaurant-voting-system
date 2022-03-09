@@ -3,6 +3,7 @@ package com.demo.system.web.restaurant;
 import com.demo.system.model.MenuItem;
 import com.demo.system.repository.MenuItemRepository;
 import com.demo.system.service.MenuItemService;
+import com.demo.system.util.validation.AdminRestaurantsUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,7 +30,7 @@ import static com.demo.system.util.validation.ValidationUtil.checkNew;
 @Slf4j
 public class AdminMenuItemController {
 
-    static final String REST_URL = "/api/admin/restaurants/{restaurantId}/menu-items";
+    static final String REST_URL =  AdminRestaurantsUtil.REST_URL + "/{restaurantId}/menu-items";
 
     private final MenuItemRepository repository;
     private final MenuItemService service;

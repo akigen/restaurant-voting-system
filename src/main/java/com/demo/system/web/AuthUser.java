@@ -1,5 +1,6 @@
 package com.demo.system.web;
 
+import com.demo.system.model.Role;
 import com.demo.system.model.User;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,5 +19,9 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
 
     public int id() {
         return user.id();
+    }
+
+    public boolean hasRole(Role role) {
+        return user.hasRole(role);
     }
 }

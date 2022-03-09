@@ -1,7 +1,12 @@
 package com.demo.system.web.restaurant;
 
 import com.demo.system.model.Restaurant;
+import com.demo.system.model.Role;
+import com.demo.system.model.User;
 import com.demo.system.repository.RestaurantRepository;
+import com.demo.system.repository.UserRepository;
+import com.demo.system.util.validation.AdminRestaurantsUtil;
+import com.demo.system.web.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,18 +33,18 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static com.demo.system.util.validation.AdminRestaurantsUtil.REST_URL;
 import static com.demo.system.util.validation.ValidationUtil.assureIdConsistent;
 import static com.demo.system.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 public class AdminRestaurantController {
 
-    static final String REST_URL = "/api/admin/restaurants";
-
     private final RestaurantRepository repository;
+    private final UserRepository userRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
@@ -49,7 +54,12 @@ public class AdminRestaurantController {
     @GetMapping
     public List<Restaurant> getAll() {
         log.info("getAll");
-        return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        User user = SecurityUtil.authUser();
+        if (user.hasRole(Role.R_ADMIN)) {
+            return repository.getIn(user.getAdminRestaurants());
+        } else {
+            return repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -70,6 +80,11 @@ public class AdminRestaurantController {
         log.info("create {}", restaurant);
         checkNew(restaurant);
         Restaurant created = repository.save(restaurant);
+        User user = SecurityUtil.authUser();
+        if (user.hasRole(Role.R_ADMIN)) {
+            AdminRestaurantsUtil.addRestaurant(user, created.getId());
+            userRepository.save(user);
+        }
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
