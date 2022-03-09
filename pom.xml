@@ -74,6 +74,12 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <!-- db migration -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <!-- code generation -->
         <!-- https://stackoverflow.com/a/68787000/548473 -->
         <dependency>

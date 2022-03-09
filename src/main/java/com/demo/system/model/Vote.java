@@ -1,7 +1,6 @@
 package com.demo.system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Vote extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -34,13 +32,6 @@ public class Vote extends BaseEntity {
     @Column(name = "actual_time", nullable = false)
     @NotNull
     private LocalTime actualTime;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    //    https://stackoverflow.com/a/44539145/548473
-    @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
-    @JsonIgnore
-    // No cascade, disable for already voted restaurant
-    private Restaurant restaurant;
 
     @Column(name = "restaurant_id")
     private int restaurantId;
