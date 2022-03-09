@@ -122,3 +122,18 @@ VALUES (1, CURRENT_DATE, '12:30:00', 1),
        (1, '2021-06-04', '15:55:00', 3),
        (2, '2021-06-05', '08:15:00', 2),
        (2, '2021-06-04', '12:55:00', 3);
+
+--changeset develop:add_admin_restaurant
+create table ADMIN_RESTAURANT
+(
+    ADMIN_ID INTEGER not null,
+    RESTAURANT_ID INTEGER not null,
+    primary key (ADMIN_ID, RESTAURANT_ID),
+    constraint FK_ADMIN_RESTAURANT_RESTAURANT foreign key (RESTAURANT_ID) references RESTAURANT (ID) on delete cascade,
+    constraint FK_ADMIN_RESTAURANT_ADMIN foreign key (ADMIN_ID) references USERS (ID) on delete cascade
+);
+
+INSERT INTO USERS (name, email, password) VALUES ('Restaurants Admin', 'r_admin@gmail.com', '{noop}radmin');
+INSERT INTO USER_ROLES (role, user_id) VALUES ('R_ADMIN', 3);
+INSERT INTO ADMIN_RESTAURANT (ADMIN_ID, RESTAURANT_ID) VALUES (3, 1),(3, 2);
+

@@ -76,6 +76,15 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
+    @CollectionTable(name = "admin_restaurant",
+            joinColumns = @JoinColumn(name = "admin_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"admin_id", "restaurant_id"}, name = "uk_admin_restaurant"))
+    @Column(name = "restaurant_id")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Integer> adminRestaurants = Set.of();
+
     public User(User u) {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
     }
